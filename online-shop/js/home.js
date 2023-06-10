@@ -1,29 +1,3 @@
-(function () {
-  console.log(0);
-  const response = fetch("http://localhost:5000/api/categories/");
-  response.then((data) => {
-    data.json().then((d) => {
-      let list = "";
-      
-      
-      d.data.forEach((element) => {
-        let categ = new Category(element);
-        cat.push(categ)
-        list =
-          list +
-          `<a data-id="${element._id}" onclick="getCities(${element._id})" href="products.php?cat_id=${element._id}" class="nav-item nav-link">${element.name}</a>`;
-      });
-      document.getElementById("categories-menu").innerHTML = list;
-      localStorage.setItem("lists", list);
-      console.log(d.data);
-    });
-  });
-  console.log(1);
-})();
-
-var cat = [];
-console.log(cat)
-
 class Category {
   _id;
   name;
@@ -36,6 +10,47 @@ class Category {
     this.productCount = obj.productCount;
   }
 }
+let categories = [];
+(function () {
+  const response = fetch("http://localhost:5000/api/categories/");
+  response.then((data) => {
+    data.json().then((d) => {
+      let list = "";
+      d.data.forEach((element) => {
+        let catObj = new Category(element);
+        categories.push(catObj);
+        list =
+          list +
+          `<a data-id="${element._id}" onclick="getCities(${element._id})" href="products.php?cat_id=${element._id}" class="nav-item nav-link">${element.name}</a>`;
+      });
+      document.getElementById("categories-menu").innerHTML = list;
+      categories.sort((a, b) => b.productCount - a.productCount);
+      showCategories(categories);
+    });
+  });
+})();
+
+const showCategories = function (array) {
+  let category = "";
+  for (let i = 0; i < 4; i++) {
+    category += `
+  <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
+      <a class="text-decoration-none" href="">
+        <div class="cat-item d-flex align-items-center mb-4">
+          <div class="overflow-hidden" style="width: 100px; height: 100px">
+          <img class="img-fluid" src="./img/cat-${i+1}.jpg" alt="${array[i].image}" />
+          </div>
+          <div class="flex-fill pl-3">
+            <h6>${array[i].name}</h6>
+            <small class="text-body">${array[i].productCount}</small>
+          </div>
+        </div>
+      </a>
+    </div>
+  `;
+  }
+  document.getElementById("categories-container").innerHTML = category;
+};
 
 class Product {
   id;
@@ -49,6 +64,7 @@ class Product {
     this.id = obj._id;
     this.name = obj.name;
     this.price = obj.price;
+    this.image = obj.image;
     this.discount = obj.discount;
     this.rating = obj.rating;
     this.rating_count = obj.rating_count;
@@ -82,7 +98,7 @@ class Product {
         </div>
       </div>
       <div class="text-center py-4">
-        <a class="h6 text-decoration-none text-truncate" href="">Product Name Goes Here</a>
+        <a class="h6 text-decoration-none text-truncate" href="">${this.name}</a>
         <div class="d-flex align-items-center justify-content-center mt-2">
           <h5>$${this.getPriceAfterDiscount()}</h5>
           <h6 class="text-muted ml-2"><del>$${this.price}</del></h6>
@@ -99,6 +115,25 @@ class Product {
     return ``;
   }
 }
+
+let products = [];
+
+(function(){
+  response = fetch("http://localhost:5000/api/products/");
+  response.then((data) => {
+    let proList = "";
+    data.json().then((d)=> {
+      d.data.forEach((element) => {
+        let pro = new Product(element);
+        products.push(pro)
+        proList =proList + pro.getHomeHTML();
+      })
+      document.getElementById("products-container").innerHTML = proList
+    console.log(products)
+    })
+  })
+})();
+
 
 class CartLine {
   product;
