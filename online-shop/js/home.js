@@ -91,8 +91,8 @@ class Product {
       <div class="product-img position-relative overflow-hidden">
         <img class="img-fluid w-100" src="${this.image}" alt="">
         <div class="product-action">
-          <a class="btn btn-outline-dark btn-square" href="#" onclick=""><i class="fa fa-shopping-cart"></i></a>
-          <a class="btn btn-outline-dark btn-square" href="#"><i class="far fa-heart"></i></a>
+          <a class="btn btn-outline-dark btn-square" href="#"><i class="fa fa-shopping-cart"></i></a>
+          <a class="btn btn-outline-dark btn-square" href="#" onclick="handleHeartedCounter('${this.id}')" id="${this.id}"><i class="far fa-heart"></i></a>
           <a class="btn btn-outline-dark btn-square" href="#"><i class="fa fa-sync-alt"></i></a>
           <a class="btn btn-outline-dark btn-square" href="#"><i class="fa fa-search"></i></a>
         </div>
@@ -117,7 +117,6 @@ class Product {
 }
 
 let products = [];
-
 (function(){
   response = fetch("http://localhost:5000/api/products/");
   response.then((data) => {
@@ -133,6 +132,28 @@ let products = [];
     })
   })
 })();
+
+let counter = 0;
+let likeSet = new Set()
+
+function handleHeartedCounter(id){
+  likeSet.add(id)
+  document.getElementById("heartCounterButton").innerHTML = likeSet.size; 
+  localStorage.setItem(likeSet)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 class CartLine {
