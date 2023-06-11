@@ -38,7 +38,9 @@ const showCategories = function (array) {
       <a class="text-decoration-none" href="">
         <div class="cat-item d-flex align-items-center mb-4">
           <div class="overflow-hidden" style="width: 100px; height: 100px">
-          <img class="img-fluid" src="./img/cat-${i+1}.jpg" alt="${array[i].image}" />
+          <img class="img-fluid" src="./img/cat-${i + 1}.jpg" alt="${
+      array[i].image
+    }" />
           </div>
           <div class="flex-fill pl-3">
             <h6>${array[i].name}</h6>
@@ -92,13 +94,17 @@ class Product {
         <img class="img-fluid w-100" src="${this.image}" alt="">
         <div class="product-action">
           <a class="btn btn-outline-dark btn-square" href="#"><i class="fa fa-shopping-cart"></i></a>
-          <a class="btn btn-outline-dark btn-square" href="#" onclick="handleHeartedCounter('${this.id}')" id="${this.id}"><i class="far fa-heart"></i></a>
+          <a class="btn btn-outline-dark btn-square" onclick="handleHeartedCounter('${
+            this.id
+          }')" id="${this.id}"><i class="far fa-heart"></i></a>
           <a class="btn btn-outline-dark btn-square" href="#"><i class="fa fa-sync-alt"></i></a>
           <a class="btn btn-outline-dark btn-square" href="#"><i class="fa fa-search"></i></a>
         </div>
       </div>
       <div class="text-center py-4">
-        <a class="h6 text-decoration-none text-truncate" href="">${this.name}</a>
+        <a class="h6 text-decoration-none text-truncate" href="">${
+          this.name
+        }</a>
         <div class="d-flex align-items-center justify-content-center mt-2">
           <h5>$${this.getPriceAfterDiscount()}</h5>
           <h6 class="text-muted ml-2"><del>$${this.price}</del></h6>
@@ -116,43 +122,53 @@ class Product {
   }
 }
 
-let products = [];
-(function(){
-  response = fetch("http://localhost:5000/api/products/");
+let featuredProducts = [];
+(function () {
+  response = fetch("http://localhost:5000/api/products/getFeatured");
   response.then((data) => {
-    let proList = "";
-    data.json().then((d)=> {
+    data.json().then((d) => {
       d.data.forEach((element) => {
         let pro = new Product(element);
-        products.push(pro)
-        proList =proList + pro.getHomeHTML();
-      })
-      document.getElementById("products-container").innerHTML = proList
-    console.log(products)
-    })
-  })
+        featuredProducts.push(pro);
+      });
+      let proList = "";
+
+      for (let i = 0; i < 8; i++) {
+        proList = proList + featuredProducts[i].getHomeHTML();
+      }
+      document.getElementById("products-container").innerHTML = proList;
+    });
+  });
+})();
+
+let recentProducts = [];
+(function () {
+  response = fetch("http://localhost:5000/api/products/getRecent");
+  response.then((data) => {
+    data.json().then((d) => {
+      d.data.forEach((element) => {
+        let pro = new Product(element);
+        recentProducts.push(pro);
+      });
+      let proList = "";
+
+      for (let i = 0; i < 8; i++) {
+        proList = proList + recentProducts[i].getHomeHTML();
+      }
+      document.getElementById("products").innerHTML = proList;
+    });
+  });
 })();
 
 let counter = 0;
-let likeSet = new Set()
+let likeSet = new Set();
 
-function handleHeartedCounter(id){
-  likeSet.add(id)
-  document.getElementById("heartCounterButton").innerHTML = likeSet.size; 
-  localStorage.setItem(likeSet)
+function handleHeartedCounter(id) {
+  likeSet.add(id);
+  document.getElementById("heartCounterButton").innerHTML = likeSet.size;
+  document.getElementById(id).style.backgroundColor = "#ffc107";
+  localStorage.setItem("likes", likeSet.size);
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
