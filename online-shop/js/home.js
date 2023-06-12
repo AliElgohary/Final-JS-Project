@@ -88,38 +88,44 @@ class Product {
   }
 
   getHomeHTML() {
+
+  
     return `<div class="col-lg-3 col-md-4 col-sm-6 pb-1">
-    <div class="product-item bg-light mb-4">
-      <div class="product-img position-relative overflow-hidden">
-        <img class="img-fluid w-100" src="${this.image}" alt="">
-        <div class="product-action">
-          <a class="btn btn-outline-dark btn-square" href="#"><i class="fa fa-shopping-cart"></i></a>
-          <a class="btn btn-outline-dark btn-square" onclick="handleHeartedCounter('${
-            this.id
-          }')" id="${this.id}"><i class="far fa-heart"></i></a>
-          <a class="btn btn-outline-dark btn-square" href="#"><i class="fa fa-sync-alt"></i></a>
-          <a class="btn btn-outline-dark btn-square" href="#"><i class="fa fa-search"></i></a>
+      <div class="product-item bg-light mb-4">
+        <div class="product-img position-relative overflow-hidden">
+          <img class="img-fluid w-100" src="${this.image}" alt="">
+          <div class="product-action">
+            <a class="btn btn-outline-dark btn-square" onclick="addToCart('${this.id}', '${this.name.replace("'", "\\'")}', ${this.price})"><i class="fa fa-shopping-cart"></i></a>
+            <a class="btn btn-outline-dark btn-square" onclick="handleHeartedCounter('${this.id}')" id="${this.id}"><i class="far fa-heart"></i></a>
+            <a class="btn btn-outline-dark btn-square" href="#"><i class="fa fa-sync-alt"></i></a>
+            <a class="btn btn-outline-dark btn-square" href="#"><i class="fa fa-search"></i></a>
+          </div>
+        </div>
+        <div class="text-center py-4">
+          <a class="h6 text-decoration-none text-truncate" href="">${
+            this.name
+          }</a>
+          <div class="d-flex align-items-center justify-content-center mt-2">
+            <h5>$${this.getPriceAfterDiscount()}</h5>
+            <h6 class="text-muted ml-2"><del>$${this.price}</del></h6>
+          </div>
+          <div class="d-flex align-items-center justify-content-center mb-1">
+            ${this.getRatingHTML()}
+          </div>
         </div>
       </div>
-      <div class="text-center py-4">
-        <a class="h6 text-decoration-none text-truncate" href="">${
-          this.name
-        }</a>
-        <div class="d-flex align-items-center justify-content-center mt-2">
-          <h5>$${this.getPriceAfterDiscount()}</h5>
-          <h6 class="text-muted ml-2"><del>$${this.price}</del></h6>
-        </div>
-        <div class="d-flex align-items-center justify-content-center mb-1">
-          ${this.getRatingHTML()}
-        </div>
-      </div>
-    </div>
-  </div>`;
+    </div>`;
   }
+  
 
   getHTML() {
     return ``;
   }
+}
+let arr = [];
+function addToCart(id,name,price) {
+  arr.push([id,name,price]);
+  console.log(arr);
 }
 
 let featuredProducts = [];
@@ -172,6 +178,8 @@ function handleHeartedCounter(id) {
 
 
 
+
+
 class CartLine {
   product;
   quantity;
@@ -200,9 +208,16 @@ class Cart {
     //loop to add products into cartlines array
   }
 
-  remove(productId) {}
-
-  getTotal() {}
+  remove(obj) {
+    this.cartlines.pop(obj)
+  } 
+  getTotal() {
+    let total = 0;
+    for(let i = 0; i > this.cartlines.length; i++){
+      total += this.cartlines[i].price;
+    }
+    return total;
+  }
 
   getSubTotal() {}
 }
