@@ -93,7 +93,7 @@ class Product {
         <div class="product-img position-relative overflow-hidden">
           <img class="img-fluid w-100" src="${this.image}" alt="">
           <div class="product-action">
-            <a class="btn btn-outline-dark btn-square" onclick="addToCart('${this.id}')" class=('${this.id}')><i class="fa fa-shopping-cart"></i></a>
+            <a class="btn btn-outline-dark btn-square" onclick="addToCart('${this.id}')"><i class="fa fa-shopping-cart"></i></a>
             <a class="btn btn-outline-dark btn-square" onclick="handleHeartedCounter('${this.id}')" id="${this.id}"><i class="far fa-heart"></i></a>
             <a class="btn btn-outline-dark btn-square" href="#"><i class="fa fa-sync-alt"></i></a>
             <a class="btn btn-outline-dark btn-square" href="#"><i class="fa fa-search"></i></a>
@@ -206,7 +206,9 @@ function addToCart(id) {
     const product = products.find(obj => obj.id == id);
     const newCartLine = new CartLine(product);
     cartArray.push(newCartLine);
+    document.getElementById(id).style.backgroundColor = "#ffc107";
   }
+
   console.log(cartArray);
 }
 
