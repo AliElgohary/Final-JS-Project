@@ -214,7 +214,6 @@ class Cart {
   }
 
   getSubTotal() {
-    
   }
 }
 
@@ -230,6 +229,7 @@ function addToCart(id) {
   }
 
   console.log(cartArray);
+  document.getElementById("cartButton").innerHTML = cartArray.length;
   localStorage.setItem("cart", JSON.stringify(cartArray));
 }
 const cart = new Cart(cartArray);
