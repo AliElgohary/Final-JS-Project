@@ -171,9 +171,6 @@ function handleHeartedCounter(id) {
 }
 
 
-
-
-
 class CartLine {
   product;
   quantity;
@@ -195,44 +192,44 @@ class CartLine {
   }
 }
 
-let cartArray = []
+class Cart {
+  cartlines;
+  constructor(productsArray) {
+    this.cartlines = [];
+    for (let product of productsArray) {
+      this.cartlines.push(new CartLine(product));
+    }
+  }
 
+  remove(index) {
+    this.cartlines.splice(index, 1);
+  }
+
+  getTotal(){
+    let total = 0;
+    for(let i = 0; i < this.cartlines.length; i++){
+      total += this.cartlines[i].getTotalPrice();
+    }
+    return total;
+  }
+
+  getSubTotal() {
+    
+  }
+}
+
+let cartArray = [];
 function addToCart(id) {
   const inCart = cartArray.find(line => line.product.id == id);
-
   if (inCart) {
     inCart.increment();
   } else {
     const product = products.find(obj => obj.id == id);
     const newCartLine = new CartLine(product);
     cartArray.push(newCartLine);
-    document.getElementById(id).style.backgroundColor = "#ffc107";
   }
 
   console.log(cartArray);
+  localStorage.setItem("cart", JSON.stringify(cartArray));
 }
-
-class Cart {
-  cartlines;
-  constructor(productsArray) {
-    this.cartlines = [];
-    //loop to add products into cartlines array
-  }
-
-  remove(obj) {
-    this.cartlines.pop(obj)
-  } 
-  getTotal() {
-    let total = 0;
-    for(let i = 0; i > this.cartlines.length; i++){
-      total += this.cartlines[i].price;
-    }
-    return total;
-  }
-
-  getSubTotal() {}
-}
-//Cart
-//CartLine
-//Product
-//Category
+const cart = new Cart(cartArray);
